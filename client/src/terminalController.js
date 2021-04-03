@@ -39,7 +39,7 @@ export default class TerminalController {
 
     setInterval(() => {
       eventEmitter.emit('message:received', { message: 'Hello world!!', username: 'dk'});
-      eventEmitter.emit('message:received', { message: 'Hello', username: 'julia'});
+    
     }, 2000);
   }
 }
