@@ -47,6 +47,8 @@ export default class TerminalController {
       .setLayoutComponent()
       .setInputComponent(this.#onInputReceived(eventEmitter))
       .setChatComponent()
+      .setActivityLogComponent()
+      .setStatusComponent()
       .build();
 
     this.#registerEvents(eventEmitter, components);
