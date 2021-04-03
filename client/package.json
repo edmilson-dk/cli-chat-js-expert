@@ -1,6 +1,13 @@
 {
-  "name": "client",
+  "name": "HackerChatClient",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81"
+  }
 }
