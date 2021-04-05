@@ -10,10 +10,13 @@ const [ nodePath, filePath, ...commands ] = process.argv;
 
 const componentEmitter = new Events();
 const config = CliConfig.parseArguments(commands);
-const socketClient = new SocketClient(config);
-const eventManager = new EventManager({ componentEmitter, socketClient });
 
+const socketClient = new SocketClient(config);
 await socketClient.initialize();
+
+const eventManager = new EventManager({ componentEmitter, socketClient });
+const events = eventManager.getEvents();
+socketClient.attachEvents(events);
 
 const data = {
   roomId: config.room,
