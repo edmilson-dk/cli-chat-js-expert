@@ -32,6 +32,23 @@ export default class Controller {
 
     this.socketServer.sendMessage(user.socket, constants.events.UPDATE_USERS, currentUsers);
     console.log(`${userData.userName} joined: ${[sockerId]}`);
+
+    this.broadCast({
+      sockerId,
+      roomId,
+      message: { id: sockerId, userName: userData.userName },
+      events: constants.events.NEW_USER_CONNECTED,
+    });
+  }
+
+  broadCast({ socketId, roomId, event, message, includeCurrentSocket = false, }) {
+    const usersOnRoom = this.#rooms.get(roomId);
+
+    for (const [key, user] of usersOnRoom) {
+      if (!includeCurrentSocket && key === sockerId) continue;
+
+      this.socketServer.sendMessage(user.socket, event, message);
+    }
   }
 
   #joinUserOnRoom(roomId, user) {
