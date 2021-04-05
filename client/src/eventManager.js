@@ -29,4 +29,12 @@ export default class EventManager {
       Array.from(this.#allUsers.values())
     );
   }
+
+  getEvents() {
+    const functions = Reflect.ownKeys(EventManager.prototype)
+      .filter(fn => fn !== 'constructor')
+      .map(name => [name, this[name].bind(this)]);
+
+    return new Map(functions);
+  }
 }
