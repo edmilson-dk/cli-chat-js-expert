@@ -21,23 +21,23 @@ export default class Controller {
     socket.on('end', this.#onSocketClosed(id));
   }
 
-  async joinRoom(sockerId, data) {
+  async joinRoom(socketId, data) {
     const userData = data;
     const { roomId } = userData;
-    const user = this.#updateGlobaUserData(sockerId, userData);
+    const user = this.#updateGlobaUserData(socketId, userData);
 
     const users = this.#joinUserOnRoom(roomId, user);
     const currentUsers = Array.from(users.values())
       .map(({ id, userName }) => ({ userName, id }));
 
     this.socketServer.sendMessage(user.socket, constants.events.UPDATE_USERS, currentUsers);
-    console.log(`${userData.userName} joined: ${[sockerId]}`);
+    console.log(`${userData.userName} joined: ${[socketId]}`);
 
     this.broadCast({
-      sockerId,
+      socketId,
       roomId,
-      message: { id: sockerId, userName: userData.userName },
-      events: constants.events.NEW_USER_CONNECTED,
+      message: { id: socketId, userName: userData.userName },
+      event: constants.events.NEW_USER_CONNECTED,
     });
   }
 
@@ -45,7 +45,7 @@ export default class Controller {
     const usersOnRoom = this.#rooms.get(roomId);
 
     for (const [key, user] of usersOnRoom) {
-      if (!includeCurrentSocket && key === sockerId) continue;
+      if (!includeCurrentSocket && key === socketId) continue;
 
       this.socketServer.sendMessage(user.socket, event, message);
     }
@@ -76,17 +76,17 @@ export default class Controller {
     }
   }
 
-  #updateGlobaUserData(sockerId, userData) {
+  #updateGlobaUserData(socketId, userData) {
     const users = this.#users;
-    const user = users.get(sockerId) ?? {};
+    const user = users.get(socketId) ?? {};
 
     const updateUserData = {
       ...user,
       ...userData,
     };
 
-    users.set(sockerId, updateUserData);
+    users.set(socketId, updateUserData);
 
-    return users.get(sockerId);
+    return users.get(socketId);
   }
 }
