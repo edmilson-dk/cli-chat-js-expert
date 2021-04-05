@@ -22,17 +22,16 @@ export default class Controller {
   }
 
   async joinRoom(sockerId, data) {
-    const userData = JSON.parse(data);
+    const userData = data;
     const { roomId } = userData;
-    console.log(`${userData.userName} joined: ${[sockerId]}`);
+    const user = this.#updateGlobaUserData(sockerId, userData);
 
     const users = this.#joinUserOnRoom(roomId, user);
-    const currentUsers = Array.from(users.value())
+    const currentUsers = Array.from(users.values())
       .map(({ id, userName }) => ({ userName, id }));
 
     this.socketServer.sendMessage(user.socket, constants.events.UPDATE_USERS, currentUsers);
-
-    const user = this.#updateGlobaUserData(sockerId, userData);
+    console.log(`${userData.userName} joined: ${[sockerId]}`);
   }
 
   #joinUserOnRoom(roomId, user) {
