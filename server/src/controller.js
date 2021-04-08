@@ -41,6 +41,18 @@ export default class Controller {
     });
   }
 
+  message(socketId, data) {
+    const { userName, roomId } = this.#users.get(socketId);
+
+    this.broadCast({
+      roomId,
+      socketId,
+      event: constants.events.MESSAGE,
+      message: { userName, message: data },
+      includeCurrentSocket: true,
+    });
+  }
+
   broadCast({ socketId, roomId, event, message, includeCurrentSocket = false, }) {
     const usersOnRoom = this.#rooms.get(roomId);
 
